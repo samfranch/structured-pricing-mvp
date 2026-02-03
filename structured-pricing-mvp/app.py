@@ -10,7 +10,7 @@ from structured_pricing.products import price_autocall_simplified
 st.set_page_config(page_title="Structured Pricing MVP", page_icon="📈", layout="centered")
 
 st.title("Moteur simplifié de pricing")
-st.caption("Black-Scholes + decomposition des payoffs")
+st.caption("Black-Scholes + décomposition des payoffs")
 
 if "spot" not in st.session_state:
     st.session_state.spot = 100.0
@@ -21,7 +21,7 @@ if "volatility" not in st.session_state:
 if "maturity" not in st.session_state:
     st.session_state.maturity = 1.0
 
-st.subheader("Donnees de marche")
+st.subheader("Données de marché")
 data_mode = st.radio(
     "Source",
     ("Saisie manuelle", "Yahoo Finance (auto)"),
@@ -49,28 +49,28 @@ if data_mode == "Yahoo Finance (auto)":
 product = st.selectbox(
     "Que voulez-vous pricer ?",
     (
-        "Obligation zero-coupon",
-        "Option Call europeenne",
-        "Option Put europeenne",
-        "Autocall simplifie",
+        "Obligation zéro-coupon",
+        "Option Call européenne",
+        "Option Put européenne",
+        "Autocall simplifié",
     ),
 )
 
-st.subheader("Parametres de marche")
+st.subheader("Paramètres de marche")
 spot = st.number_input("Spot (S0)", min_value=0.0001, step=1.0, key="spot")
 rate = st.number_input("Taux sans risque r (ex: 0.02)", step=0.005, format="%.4f", key="rate")
-volatility = st.number_input("Volatilite sigma (ex: 0.20)", min_value=0.0001, step=0.01, format="%.4f", key="volatility")
-maturity = st.number_input("Maturite T (annees)", min_value=0.0001, step=0.25, format="%.4f", key="maturity")
+volatility = st.number_input("Volatilité sigma (ex: 0.20)", min_value=0.0001, step=0.01, format="%.4f", key="volatility")
+maturity = st.number_input("maturité T (années)", min_value=0.0001, step=0.25, format="%.4f", key="maturity")
 
 result = None
 
-if product == "Obligation zero-coupon":
+if product == "Obligation zéro-coupon":
     if st.button("Calculer le prix"):
         result = zero_coupon_price(rate=rate, maturity=maturity)
-        st.success(f"Prix theorique (par nominal 1): {result:.6f}")
-        st.info("Interpretation: cout aujourd'hui d'un paiement certain de 1 a maturite.")
+        st.success(f"Prix théorique (par nominal 1): {result:.6f}")
+        st.info("Interprétation: coût aujourd'hui d'un paiement certain de 1 a maturité.")
 
-elif product == "Option Call europeenne":
+elif product == "Option Call européenne":
     strike = st.number_input("Strike K", min_value=0.0001, value=100.0, step=1.0)
     if st.button("Calculer le prix"):
         result = price_call_bs(
@@ -80,16 +80,16 @@ elif product == "Option Call europeenne":
             volatility=volatility,
             maturity=maturity,
         )
-        st.success(f"Prix theorique du call: {result:.6f}")
-        st.info("Decomposition payoff: max(S_T - K, 0).")
+        st.success(f"Prix théorique du call: {result:.6f}")
+        st.info("Décomposition payoff: max(S_T - K, 0).")
 
-        st.markdown("**Profil de payoff a maturite**")
+        st.markdown("**Profil de payoff a maturité**")
         prices = [0.5 * spot + i * (spot / 15.0) for i in range(31)]
         payoffs = [max(p - strike, 0.0) for p in prices]
         chart_df = pd.DataFrame({"S_T": prices, "Payoff": payoffs})
         st.line_chart(chart_df, x="S_T", y="Payoff", use_container_width=True)
 
-elif product == "Option Put europeenne":
+elif product == "Option Put européenne":
     strike = st.number_input("Strike K", min_value=0.0001, value=100.0, step=1.0)
     if st.button("Calculer le prix"):
         result = price_put_bs(
@@ -99,10 +99,10 @@ elif product == "Option Put europeenne":
             volatility=volatility,
             maturity=maturity,
         )
-        st.success(f"Prix theorique du put: {result:.6f}")
+        st.success(f"Prix théorique du put: {result:.6f}")
         st.info("Decomposition payoff: max(K - S_T, 0).")
 
-        st.markdown("**Profil de payoff a maturite**")
+        st.markdown("**Profil de payoff a maturité**")
         prices = [0.5 * spot + i * (spot / 15.0) for i in range(31)]
         payoffs = [max(strike - p, 0.0) for p in prices]
         chart_df = pd.DataFrame({"S_T": prices, "Payoff": payoffs})
@@ -125,7 +125,7 @@ elif product == "Autocall simplifie":
             coupon_rate=coupon_rate,
             nominal=nominal,
         )
-        st.success(f"Prix theorique de l'autocall simplifie: {result:.6f}")
+        st.success(f"Prix théorique de l'autocall simplifié: {result:.6f}")
 
         zc_value = nominal * zero_coupon_price(rate=rate, maturity=maturity)
         digital_call_value = price_digital_call_bs(
@@ -149,7 +149,7 @@ elif product == "Autocall simplifie":
         col2.metric("Digitale call", f"{digital_call_value:.4f}")
         col3.metric("Put vendue", f"-{put_sold_cost:.4f}")
 
-        st.markdown("**Profil de payoff simplifie a maturite**")
+        st.markdown("**Profil de payoff simplifié a maturité**")
         prices = [0.5 * spot + i * (spot / 15.0) for i in range(31)]
         payoffs = []
         for p in prices:
@@ -164,5 +164,5 @@ elif product == "Autocall simplifie":
 
 st.divider()
 st.markdown(
-    "Cette interface est un MVP pedagogique. Les resultats sont theoriques et bases sur des hypotheses simplificatrices."
+    "Cette interface est un MVP pédagogique. Les résultats sont théoriques et bases sur des hypothèses simplificatrices."
 )
