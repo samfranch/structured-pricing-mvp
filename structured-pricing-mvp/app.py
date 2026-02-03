@@ -6,6 +6,26 @@ from structured_pricing.bonds import zero_coupon_price
 from structured_pricing.market_data import fetch_market_snapshot
 from structured_pricing.products import price_autocall_simplified
 
+def show_option_decomposition(option_price: float, intrinsic_value: float, title: str) -> None:
+    time_value = max(option_price - intrinsic_value, 0.0)
+
+    st.markdown(f"**Decomposition du prix du {title}**")
+    st.markdown(
+        f"""
+        <div style="display:flex; gap:12px; margin:8px 0 12px 0;">
+            <div style="flex:1; padding:14px; border-radius:10px; background:#eaf7ee; border:1px solid #b8e3c5;">
+                <div style="font-size:0.9rem; color:#1f6f3d; font-weight:600;">Valeur intrinseque</div>
+                <div style="font-size:1.4rem; color:#145a32; font-weight:700;">{intrinsic_value:.6f}</div>
+            </div>
+            <div style="flex:1; padding:14px; border-radius:10px; background:#eaf2ff; border:1px solid #bfd3ff;">
+                <div style="font-size:0.9rem; color:#1e4fa3; font-weight:600;">Valeur temps</div>
+                <div style="font-size:1.4rem; color:#163d82; font-weight:700;">{time_value:.6f}</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
 
 st.set_page_config(page_title="Structured Pricing MVP", page_icon="📈", layout="centered")
 
@@ -81,6 +101,9 @@ elif product == "Option Call européenne":
             maturity=maturity,
         )
         st.success(f"Prix théorique du call: {result:.6f}")
+        intrinsic_value = max(spot - strike, 0.0)
+        show_option_decomposition(result, intrinsic_value, "call")
+
         st.info("Décomposition payoff: max(S_T - K, 0).")
 
         st.markdown("**Profil de payoff a maturité**")
@@ -100,6 +123,8 @@ elif product == "Option Put européenne":
             maturity=maturity,
         )
         st.success(f"Prix théorique du put: {result:.6f}")
+        intrinsic_value = max(strike - spot, 0.0)
+        show_option_decomposition(result, intrinsic_value, "put")
         st.info("Decomposition payoff: max(K - S_T, 0).")
 
         st.markdown("**Profil de payoff a maturité**")
