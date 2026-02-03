@@ -74,6 +74,7 @@ product = st.selectbox(
         "Option Put européenne",
         "Autocall simplifié",
     ),
+    index=1,  # default = Option Call européenne
 )
 
 st.subheader("Paramètres de marché")
