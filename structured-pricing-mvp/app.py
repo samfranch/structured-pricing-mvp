@@ -9,7 +9,7 @@ from structured_pricing.products import price_autocall_simplified
 
 st.set_page_config(page_title="Structured Pricing MVP", page_icon="📈", layout="centered")
 
-st.title("Moteur simplifie de pricing")
+st.title("Moteur simplifié de pricing")
 st.caption("Black-Scholes + decomposition des payoffs")
 
 if "spot" not in st.session_state:
