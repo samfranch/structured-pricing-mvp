@@ -56,7 +56,7 @@ product = st.selectbox(
     ),
 )
 
-st.subheader("Paramètres de marche")
+st.subheader("Paramètres de marché")
 spot = st.number_input("Spot (S0)", min_value=0.0001, step=1.0, key="spot")
 rate = st.number_input("Taux sans risque r (ex: 0.02)", step=0.005, format="%.4f", key="rate")
 volatility = st.number_input("Volatilité sigma (ex: 0.20)", min_value=0.0001, step=0.01, format="%.4f", key="volatility")
