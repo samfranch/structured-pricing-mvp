@@ -1,26 +1,26 @@
 # Structured Pricing MVP
 
-MVP pedagogique pour pricer :
-- obligation zero-coupon,
-- call europeen,
-- put europeen,
-- autocall simplifie.
+MVP pédagogique pour pricer :
+- obligation zéro-coupon,
+- call européen,
+- put européen,
+- autocall simplifié.
 
 L'application permet aussi :
-- la saisie manuelle des parametres de marche,
-- le chargement automatique du spot/volatilite via Yahoo Finance (`yfinance`),
-- l'affichage de profils de payoff.
-- Décomposition pédagogique du prix des options vanilles :
+- la saisie manuelle des paramètres de marché,
+- le chargement automatique du spot et de la volatilité via Yahoo Finance (`yfinance`),
+- l'affichage de profils de payoff,
+- la décomposition pédagogique du prix des options vanilles :
   - **Valeur intrinsèque**
   - **Valeur temps**
-- Formules affichées en cohérence avec Black-Scholes :
-  - Call : `max(S0 - K, 0)` ; `Valeur temps = Prix call - Valeur intrinsèque`
-  - Put : `max(K - S0, 0)` ; `Valeur temps = Prix put - Valeur intrinsèque`
-- UX améliorée :
-  - Produit par défaut : **Option Call européenne**
-  - Chargement des données marché via Yahoo Finance (spot + volatilité estimée)
-  - Graphiques de payoff pour Call, Put et Autocall simplifié
 
+Formules (cohérentes avec Black-Scholes) :
+- Call : `max(S0 - K, 0)` ; `Valeur temps = Prix call - Valeur intrinsèque`
+- Put : `max(K - S0, 0)` ; `Valeur temps = Prix put - Valeur intrinsèque`
+
+UX :
+- Produit par défaut : **Option Call européenne**
+- Graphiques de payoff pour Call, Put et Autocall simplifié
 ## Lancer le projet
 
 ```bash
